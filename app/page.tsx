@@ -126,6 +126,9 @@ export default function Home() {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+        height: "100vh",
+        minHeight: "-webkit-fill-available" // This helps with mobile viewport height issues
       }}
     >
       {showWarning && (

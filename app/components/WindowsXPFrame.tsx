@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from "react"
 import { Minus, Square, X } from "lucide-react"
 import type React from "react"
@@ -24,16 +26,16 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
 
   return (
     <div
-      className={`bg-[#ECE9D8] border-2 border-[#0054E3] rounded-t-lg shadow-lg transition-all duration-300 flex flex-col ${
+      className={`bg-[#ECE9D8] border-2 border-[#0054E3] rounded-t-lg shadow-lg transition-all duration-300 flex flex-col z-40 ${
         isMaximized
           ? isMobile
             ? "fixed inset-4 rounded-t-lg"
             : "fixed inset-x-0 top-0 bottom-12 rounded-none"
-          : "w-full max-w-4xl mx-4 relative min-h-[80vh]"
+          : "w-full max-w-4xl mx-4 relative min-h-[80vh] max-h-[80vh]"
       }`}
-    >
       style={{
-        maxHeight: isMaximized ? 'calc(100vh - 48px)' : 'calc(100vh - 2rem)',
+        height: isMaximized ? 'calc(100vh - 48px)' : undefined,
+        maxHeight: isMaximized ? 'calc(100vh - 48px)' : '80vh'
       }}
     >
       <div className="bg-gradient-to-r from-[#0054E3] to-[#2683FF] text-white py-1 px-2 flex justify-between items-center rounded-t shrink-0">
@@ -64,11 +66,6 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
       </div>
       <div 
         className="flex-1 bg-white overflow-y-auto p-4 md:p-6" 
-        style={{
-          maxHeight: isMaximized 
-            ? 'calc(100vh - 3rem - 48px)'
-            : 'calc(100vh - 4rem)',
-        }}
       >
         {children}
       </div>
