@@ -9,6 +9,7 @@ const StartButton: React.FC<StartButtonProps> = ({ onClick }) => {
     <button
       className="h-full px-3 flex items-center bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 text-white font-bold rounded-r-sm transition-colors"
       onClick={onClick}
+      data-start-button="true"
     >
       <span className="mr-2">🪟</span>
       <span className="whitespace-nowrap">Start</span>

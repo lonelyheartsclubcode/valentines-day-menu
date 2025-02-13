@@ -29,6 +29,12 @@ export default function Home() {
   }, [controls])
 
   const handleTap = (event: React.MouseEvent | React.TouchEvent) => {
+    // Don't close start menu if clicking within it or on the start button
+    const target = event.target as HTMLElement;
+    if (target.closest('[data-start-menu="true"]') || target.closest('[data-start-button="true"]')) {
+      return;
+    }
+    
     if (showStartMenu) setShowStartMenu(false)
 
     const { clientX, clientY } = "touches" in event ? event.touches[0] : event
@@ -191,12 +197,14 @@ export default function Home() {
 
       {/* Start Menu */}
       {showStartMenu && (
-        <StartMenu
-          onMenuClick={() => {
-            handleOpenMenu()
-            setShowStartMenu(false)
-          }}
-        />
+        <div data-start-menu="true" onClick={(e) => e.stopPropagation()}>
+          <StartMenu
+            onMenuClick={() => {
+              handleOpenMenu()
+              setShowStartMenu(false)
+            }}
+          />
+        </div>
       )}
     </main>
   )
