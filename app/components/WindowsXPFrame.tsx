@@ -65,9 +65,8 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
         className="flex-1 bg-white overflow-y-auto p-4 md:p-6" 
         style={{
           maxHeight: isMaximized 
-            ? 'calc(100vh - 2.5rem - 48px)'
-            : 'calc(100vh - 4rem - 48px)',
-          paddingBottom: '2rem',
+            ? 'calc(100vh - 2.5rem)' 
+            : 'calc(100vh - 4rem)',
         }}
       >
         {children}
