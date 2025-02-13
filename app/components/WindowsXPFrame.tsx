@@ -29,19 +29,19 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
       className={`bg-[#ECE9D8] border-2 border-[#0054E3] rounded-t-lg shadow-lg transition-all duration-300 flex flex-col z-40 ${
         isMaximized
           ? isMobile
-            ? "fixed inset-4 rounded-t-lg"
+            ? "fixed inset-x-0 top-0 bottom-12 rounded-none"
             : "fixed inset-x-0 top-0 bottom-12 rounded-none"
           : "w-full max-w-4xl mx-4 relative"
       }`}
       style={{
         height: isMaximized 
           ? isMobile
-            ? 'calc(100dvh - 48px - env(safe-area-inset-bottom))' // Use dynamic viewport height and account for safe area
-            : 'calc(100vh - 48px)' // Account for taskbar on desktop
+            ? `calc(100vh - env(safe-area-inset-bottom))`
+            : '100vh'
           : undefined,
         minHeight: isMaximized ? undefined : '85vh',
-        maxHeight: isMaximized ? undefined : 'calc(100vh - 6rem)', // Give some breathing room in windowed mode
-        WebkitOverflowScrolling: 'touch' // Enable smooth scrolling on iOS
+        maxHeight: isMaximized ? undefined : 'calc(100vh - 6rem)',
+        WebkitOverflowScrolling: 'touch'
       }}
     >
       <div className="bg-gradient-to-r from-[#0054E3] to-[#2683FF] text-white py-1 px-2 flex justify-between items-center rounded-t shrink-0">
