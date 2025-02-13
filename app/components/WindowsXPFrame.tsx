@@ -31,7 +31,7 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
           ? isMobile
             ? "fixed inset-x-0 top-0 bottom-12 rounded-none"
             : "fixed inset-x-0 top-0 bottom-12 rounded-none"
-          : "w-full max-w-4xl mx-4 relative"
+          : "w-full max-w-4xl mx-4 relative min-h-[80vh]"
       }`}
       style={{
         height: isMaximized 
@@ -39,8 +39,8 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
             ? `calc(100vh - env(safe-area-inset-bottom))`
             : '100vh'
           : undefined,
-        minHeight: isMaximized ? undefined : '85vh',
-        maxHeight: isMaximized ? undefined : 'calc(100vh - 6rem)',
+        minHeight: isMaximized ? undefined : '80vh',
+        maxHeight: isMaximized ? undefined : 'calc(100vh - 4rem)',
         WebkitOverflowScrolling: 'touch'
       }}
     >
@@ -71,7 +71,7 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
         </div>
       </div>
       <div 
-        className="flex-1 bg-white overflow-y-auto p-4 md:p-6" 
+        className="flex-1 bg-white overflow-y-auto p-4 md:p-6 pb-8"
       >
         {children}
       </div>
