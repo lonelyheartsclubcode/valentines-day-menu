@@ -31,6 +31,7 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
             : "fixed inset-x-0 top-0 bottom-12 rounded-none"
           : "w-full max-w-4xl mx-4 relative min-h-[80vh]"
       }`}
+    >
       style={{
         maxHeight: isMaximized ? 'calc(100vh - 48px)' : 'calc(100vh - 2rem)',
       }}
@@ -65,7 +66,7 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
         className="flex-1 bg-white overflow-y-auto p-4 md:p-6" 
         style={{
           maxHeight: isMaximized 
-            ? 'calc(100vh - 2.5rem)' 
+            ? 'calc(100vh - 3rem - 48px)'
             : 'calc(100vh - 4rem)',
         }}
       >
