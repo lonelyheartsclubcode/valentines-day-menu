@@ -14,7 +14,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ onMenuClick }) => {
       exit={{ opacity: 0, y: 20 }}
     >
       <div className="h-12 bg-gradient-to-r from-[#0054E3] to-[#2683FF] flex items-center px-4">
-        <span className="text-white font-bold">User</span>
+        <span className="text-white font-bold">User: Spy</span>
       </div>
       <div className="p-2">
         <button
