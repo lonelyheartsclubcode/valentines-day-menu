@@ -74,13 +74,7 @@ const Menu: React.FC = () => {
         transition={{ delay: 0.8 }}
       >
         <p>Bon Appétit!</p>
-
-
-
-
-
-        
-</motion.div>
+      </motion.div>
     </motion.div>
   )
 }
