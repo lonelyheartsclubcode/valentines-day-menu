@@ -24,15 +24,15 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
 
   return (
     <div
-      className={`bg-[#ECE9D8] border-2 border-[#0054E3] rounded-t-lg shadow-lg transition-all duration-300 ${
+      className={`bg-[#ECE9D8] border-2 border-[#0054E3] rounded-t-lg shadow-lg transition-all duration-300 flex flex-col ${
         isMaximized
           ? isMobile
             ? "fixed inset-4 rounded-t-lg"
             : "fixed inset-0 rounded-none"
-          : "w-full max-w-4xl mx-4 relative"
+          : "w-full max-w-4xl mx-4 relative min-h-[80vh]"
       }`}
     >
-      <div className="bg-gradient-to-r from-[#0054E3] to-[#2683FF] text-white py-1 px-2 flex justify-between items-center rounded-t">
+      <div className="bg-gradient-to-r from-[#0054E3] to-[#2683FF] text-white py-1 px-2 flex justify-between items-center rounded-t shrink-0">
         <div className="text-sm md:text-base font-semibold flex items-center">
           <span className="mr-2 text-xl">💌</span>
           Valentine's Menu - Internet Explorer
@@ -59,17 +59,11 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
         </div>
       </div>
       <div 
-        className="p-4 bg-white overflow-auto overscroll-contain" 
-        style={{ 
-          height: isMaximized 
-            ? isMobile 
-              ? "calc(100vh - 11rem)" // Further increased space for mobile
-              : "calc(100vh - 40px)" 
-            : "auto",
-          paddingBottom: isMobile ? "3rem" : "1rem" // Increased bottom padding for mobile
-        }}
+        className="flex-1 bg-white" 
       >
-        {children}
+        <div className="h-full overflow-auto overscroll-contain p-4 md:p-6">
+          {children}
+        </div>
       </div>
     </div>
   )

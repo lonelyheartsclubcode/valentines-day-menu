@@ -6,9 +6,28 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
 
 export const metadata = {
-  title: "Valentine's Day Menu for Nayu",
-  description: "A special Valentine's Day prix fixe menu",
-    generator: 'v0.dev'
+  title: "Valentine's Menu",
+  description: "A special Valentine's Day menu with a selection of romantic dishes including Salmon Sashimi, Miso-Glazed Black Cod, and Matcha Crème Brûlée.",
+  icons: {
+    icon: [
+      {
+        url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">😍</text></svg>',
+        type: 'image/svg+xml',
+      },
+    ],
+  },
+  openGraph: {
+    title: "Valentine's Day Menu 💝",
+    description: "A special Valentine's Day menu with a selection of romantic dishes including Salmon Sashimi, Miso-Glazed Black Cod, and Matcha Crème Brûlée.",
+    type: "website",
+    siteName: "Valentine's Menu",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Valentine's Day Menu 💝",
+    description: "A special Valentine's Day menu with a selection of romantic dishes including Salmon Sashimi, Miso-Glazed Black Cod, and Matcha Crème Brûlée.",
+    creator: "@nayu",
+  },
 }
 
 export default function RootLayout({

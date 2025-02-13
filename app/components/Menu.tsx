@@ -27,9 +27,9 @@ export default function Menu() {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white rounded shadow-inner p-4 md:p-8"
+      className="h-full flex flex-col"
     >
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 shrink-0">
         <h1 className="text-4xl md:text-5xl font-serif text-rose-800 mb-3">Valentine&apos;s Day</h1>
         <h2 className="text-2xl md:text-3xl font-serif text-rose-600">Prix Fixe Menu</h2>
         <div className="flex justify-center items-center mt-3">
@@ -38,7 +38,7 @@ export default function Menu() {
           <Heart className="text-rose-500 ml-2" size={20} />
         </div>
       </div>
-      <div className="space-y-8">
+      <div className="flex-1 space-y-8 overflow-auto">
         {menuItems.map((item, index) => (
           <motion.div
             key={index}
@@ -52,7 +52,7 @@ export default function Menu() {
           </motion.div>
         ))}
       </div>
-      <div className="mt-8 text-center text-rose-600 font-serif text-base md:text-lg">
+      <div className="mt-8 text-center text-rose-600 font-serif text-base md:text-lg shrink-0">
         <p>Bon Appétit!</p>
       </div>
     </motion.div>
