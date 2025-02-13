@@ -36,7 +36,7 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
       style={{
         height: isMaximized 
           ? isMobile
-            ? 'calc(100vh - 48px - 32px)' // Account for taskbar and insets on mobile
+            ? 'calc(100dvh - 48px - env(safe-area-inset-bottom))' // Use dynamic viewport height and account for safe area
             : 'calc(100vh - 48px)' // Account for taskbar on desktop
           : undefined,
         minHeight: isMaximized ? undefined : '85vh',
