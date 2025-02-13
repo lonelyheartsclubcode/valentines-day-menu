@@ -95,6 +95,7 @@ export default function Home() {
     setTimeout(() => {
       setShowInitialAnimation(false)
       setShowMenu(true)
+      setIsMaximized(false) // Ensure it starts in windowed mode
     }, 3000) // Increased duration for more emojis to show
   }
 
