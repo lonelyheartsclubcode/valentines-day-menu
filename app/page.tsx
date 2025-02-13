@@ -17,7 +17,21 @@ export default function Home() {
   const [hearts, setHearts] = useState<{ id: number; x: number; y: number }[]>([])
   const [emojis, setEmojis] = useState<{ id: number; emoji: string; x: number; y: number }[]>([])
   const [showInitialAnimation, setShowInitialAnimation] = useState(false)
+  const [showWarning, setShowWarning] = useState(true)
   const controls = useAnimation()
+
+  useEffect(() => {
+    // Set up periodic warning popup
+    const showWarningPeriodically = () => {
+      setShowWarning(true)
+    }
+    
+    // Show warning every minute
+    const warningInterval = setInterval(showWarningPeriodically, 60000)
+    
+    // Cleanup interval on unmount
+    return () => clearInterval(warningInterval)
+  }, [])
 
   useEffect(() => {
     const showPopup = async () => {
@@ -73,6 +87,24 @@ export default function Home() {
     }, 3000) // Increased duration for more emojis to show
   }
 
+  const handleWarningClick = () => {
+    setShowWarning(false)
+    // Create 20 bug emojis with more random positions and staggered animations
+    const newEmojis = Array.from({ length: 20 }).map((_, i) => ({
+      id: Date.now() + Math.random(),
+      emoji: "🐛",
+      x: (Math.random() * 0.8 + 0.1) * window.innerWidth, // Keep within middle 80% of screen
+      y: (Math.random() * 0.7 + 0.1) * (window.innerHeight - 100), // Keep within middle 70% of screen, avoid taskbar
+      delay: i * 50, // Stagger the animations
+    }))
+    setEmojis((prev) => [...prev, ...newEmojis])
+    
+    // Remove emojis after animation
+    setTimeout(() => {
+      setEmojis((prev) => prev.filter(e => !newEmojis.find(ne => ne.id === e.id)))
+    }, 3000)
+  }
+
   return (
     <main
       className="min-h-screen w-full text-black flex flex-col items-center justify-center relative overflow-hidden cursor-default"
@@ -85,6 +117,20 @@ export default function Home() {
         backgroundRepeat: "no-repeat",
       }}
     >
+      {showWarning && (
+        <motion.div
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -100, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed top-4 left-1/2 -translate-x-1/2 bg-yellow-100 border-2 border-yellow-400 px-4 py-2 rounded shadow-lg cursor-pointer z-50 flex items-center hover:bg-yellow-50 active:bg-yellow-200"
+          onClick={handleWarningClick}
+        >
+          <span className="text-2xl mr-2 animate-bounce">⚠️</span>
+          <span className="font-bold text-gray-800">Your computer might be at risk! Click here to scan now!</span>
+        </motion.div>
+      )}
+
       {/* Desktop icon */}
       {!showMenu && !showInitialAnimation && (
         <div className="absolute top-4 left-4">

@@ -29,7 +29,7 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
           ? isMobile
             ? "fixed inset-4 rounded-t-lg"
             : "fixed inset-0 rounded-none"
-          : "w-full max-w-4xl mx-4"
+          : "w-full max-w-4xl mx-4 relative"
       }`}
     >
       <div className="bg-gradient-to-r from-[#0054E3] to-[#2683FF] text-white py-1 px-2 flex justify-between items-center rounded-t">
