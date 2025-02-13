@@ -31,6 +31,9 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
             : "fixed inset-0 rounded-none"
           : "w-full max-w-4xl mx-4 relative min-h-[80vh]"
       }`}
+      style={{
+        maxHeight: isMaximized ? '100vh' : 'calc(100vh - 2rem)',
+      }}
     >
       <div className="bg-gradient-to-r from-[#0054E3] to-[#2683FF] text-white py-1 px-2 flex justify-between items-center rounded-t shrink-0">
         <div className="text-sm md:text-base font-semibold flex items-center">
@@ -60,6 +63,11 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
       </div>
       <div 
         className="flex-1 bg-white overflow-y-auto p-4 md:p-6" 
+        style={{
+          maxHeight: isMaximized 
+            ? 'calc(100vh - 2.5rem)' 
+            : 'calc(100vh - 4rem)',
+        }}
       >
         {children}
       </div>

@@ -42,6 +42,17 @@ export default function Home() {
     showPopup()
   }, [controls])
 
+  useEffect(() => {
+    if (showMenu && !isMinimized) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [showMenu, isMinimized]);
+
   const handleTap = (event: React.MouseEvent | React.TouchEvent) => {
     // Don't close start menu if clicking within it or on the start button
     const target = event.target as HTMLElement;
