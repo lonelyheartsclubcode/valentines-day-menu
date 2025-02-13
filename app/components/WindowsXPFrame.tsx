@@ -28,11 +28,11 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
         isMaximized
           ? isMobile
             ? "fixed inset-4 rounded-t-lg"
-            : "fixed inset-0 rounded-none"
+            : "fixed inset-x-0 top-0 bottom-12 rounded-none"
           : "w-full max-w-4xl mx-4 relative min-h-[80vh]"
       }`}
       style={{
-        maxHeight: isMaximized ? '100vh' : 'calc(100vh - 2rem)',
+        maxHeight: isMaximized ? 'calc(100vh - 48px)' : 'calc(100vh - 2rem)',
       }}
     >
       <div className="bg-gradient-to-r from-[#0054E3] to-[#2683FF] text-white py-1 px-2 flex justify-between items-center rounded-t shrink-0">

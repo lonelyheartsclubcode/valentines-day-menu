@@ -118,7 +118,7 @@ export default function Home() {
 
   return (
     <main
-      className="min-h-screen w-full text-black flex flex-col items-center justify-center relative overflow-hidden cursor-default"
+      className="h-screen w-full text-black flex flex-col items-center justify-center relative overflow-hidden cursor-default"
       onClick={handleTap}
       onTouchStart={handleTap}
       style={{
