@@ -29,30 +29,30 @@ export default function Menu() {
       transition={{ duration: 0.5 }}
       className="flex flex-col"
     >
-      <div className="text-center mb-6">
-        <h1 className="text-4xl md:text-5xl font-serif text-rose-800 mb-3">Valentine&apos;s Day</h1>
+      <div className="text-center mb-4">
+        <h1 className="text-4xl md:text-5xl font-serif text-rose-800 mb-2">Valentine&apos;s Day</h1>
         <h2 className="text-2xl md:text-3xl font-serif text-rose-600">Prix Fixe Menu</h2>
-        <div className="flex justify-center items-center mt-3">
+        <div className="flex justify-center items-center mt-2">
           <Heart className="text-rose-500 mr-2" size={20} />
           <span className="text-rose-600 font-serif text-lg">for Nayu</span>
           <Heart className="text-rose-500 ml-2" size={20} />
         </div>
       </div>
-      <div className="space-y-6 mb-6">
+      <div className="space-y-4 mb-4">
         {menuItems.map((item, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="border-b border-rose-200 pb-4 last:border-b-0"
+            className="border-b border-rose-200 pb-3 last:border-b-0"
           >
-            <h3 className="text-xl md:text-2xl font-serif font-semibold mb-2 text-rose-800 leading-tight">{item.name}</h3>
+            <h3 className="text-xl md:text-2xl font-serif font-semibold mb-1.5 text-rose-800 leading-tight">{item.name}</h3>
             <p className="text-rose-600 italic text-base md:text-lg leading-relaxed">{item.description}</p>
           </motion.div>
         ))}
       </div>
-      <div className="text-center text-rose-600 font-serif text-base md:text-lg">
+      <div className="text-center text-rose-600 font-serif text-base md:text-lg mt-auto pb-2">
         <p>Bon Appétit!</p>
       </div>
     </motion.div>
