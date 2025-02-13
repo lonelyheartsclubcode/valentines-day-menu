@@ -59,9 +59,9 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
         </div>
       </div>
       <div 
-        className="flex-1 bg-white" 
+        className="flex-1 bg-white overflow-hidden flex flex-col" 
       >
-        <div className="h-full overflow-auto overscroll-contain p-4 md:p-6">
+        <div className="flex-1 overflow-y-auto overscroll-contain p-4 md:p-6">
           {children}
         </div>
       </div>
