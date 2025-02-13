@@ -31,12 +31,16 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
           ? isMobile
             ? "fixed inset-4 rounded-t-lg"
             : "fixed inset-x-0 top-0 bottom-12 rounded-none"
-          : "w-full max-w-4xl mx-4 relative min-h-[80vh]"
+          : "w-full max-w-4xl mx-4 relative"
       }`}
       style={{
-        maxHeight: isMaximized 
-          ? 'calc(100vh - 48px)' // Just account for taskbar in fullscreen
-          : '90vh' // Increased from 80vh to give more room in windowed mode
+        height: isMaximized 
+          ? isMobile
+            ? 'calc(100vh - 48px - 32px)' // Account for taskbar and insets on mobile
+            : 'calc(100vh - 48px)' // Account for taskbar on desktop
+          : undefined,
+        minHeight: isMaximized ? undefined : '85vh',
+        maxHeight: isMaximized ? undefined : 'calc(100vh - 6rem)' // Give some breathing room in windowed mode
       }}
     >
       <div className="bg-gradient-to-r from-[#0054E3] to-[#2683FF] text-white py-1 px-2 flex justify-between items-center rounded-t shrink-0">
