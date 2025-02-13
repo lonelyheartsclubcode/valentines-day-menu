@@ -59,11 +59,9 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
         </div>
       </div>
       <div 
-        className="flex-1 bg-white" 
+        className="flex-1 bg-white overflow-y-auto p-4 md:p-6" 
       >
-        <div className="h-full overflow-y-auto p-4 md:p-6">
-          {children}
-        </div>
+        {children}
       </div>
     </div>
   )
