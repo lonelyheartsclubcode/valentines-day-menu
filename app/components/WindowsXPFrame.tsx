@@ -40,7 +40,8 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({ children, onClose, onMi
             : 'calc(100vh - 48px)' // Account for taskbar on desktop
           : undefined,
         minHeight: isMaximized ? undefined : '85vh',
-        maxHeight: isMaximized ? undefined : 'calc(100vh - 6rem)' // Give some breathing room in windowed mode
+        maxHeight: isMaximized ? undefined : 'calc(100vh - 6rem)', // Give some breathing room in windowed mode
+        WebkitOverflowScrolling: 'touch' // Enable smooth scrolling on iOS
       }}
     >
       <div className="bg-gradient-to-r from-[#0054E3] to-[#2683FF] text-white py-1 px-2 flex justify-between items-center rounded-t shrink-0">
