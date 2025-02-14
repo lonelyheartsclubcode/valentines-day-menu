@@ -17,7 +17,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ onMenuClick, onLogout }) => {
       exit={{ opacity: 0, y: 20 }}
     >
       <div className="h-12 bg-gradient-to-r from-[#0054E3] to-[#2683FF] flex items-center px-4">
-        <span className="text-white font-bold">crushcultureOS</span>
+        <span className="text-white font-bold">nayu</span>
       </div>
       <div className="p-2 space-y-1">
         <button

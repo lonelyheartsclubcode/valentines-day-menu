@@ -12,7 +12,6 @@ body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-start-rgb));
   font-family: "Tahoma", sans-serif;
-  cursor: url("/cursor.png"), auto;
 }
 
 /* Windows XP inspired button */
