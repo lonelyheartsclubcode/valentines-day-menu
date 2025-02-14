@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { X } from "lucide-react"
+import { supabase, type MessageLog } from '@/lib/supabase'
 
 interface LoginScreenProps {
   onLogin: () => void
@@ -28,6 +29,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [showPopup4, setShowPopup4] = useState(false)
   const [replyText, setReplyText] = useState("")
   const [showSentAnimation, setShowSentAnimation] = useState(0)
+  const [messageLogs, setMessageLogs] = useState<MessageLog[]>([])
 
   useEffect(() => {
     // Create initial emojis
@@ -106,8 +108,51 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     setTimeout(() => setShowPopup1(true), 60000) // 60 seconds = 60000ms
   }
 
-  const handleSendReply = (popupNumber: number) => {
+  const getMessageContent = (popupNumber: number): string => {
+    switch(popupNumber) {
+      case 1:
+        return "i need an extra 30 min"
+      case 2:
+        return "wyd"
+      case 3:
+        return "see you soon"
+      case 4:
+        return "🎸 🎮 🎧 🎬 🎨"
+      default:
+        return ""
+    }
+  }
+
+  const logMessage = async (messageNumber: number, response: string) => {
+    const now = new Date()
+    const timestamp = now.toLocaleString()
+    const originalMessage = getMessageContent(messageNumber)
+    
+    const newLog: MessageLog = {
+      timestamp,
+      original_message: originalMessage,
+      response,
+      message_number: messageNumber
+    }
+    
+    try {
+      const { error } = await supabase
+        .from('message_logs')
+        .insert(newLog)
+      
+      if (error) {
+        console.error('Error logging message:', error)
+      }
+    } catch (error) {
+      console.error('Error logging message:', error)
+    }
+  }
+
+  const handleSendReply = async (popupNumber: number) => {
     if (replyText.trim()) {
+      // Log the message before clearing the reply text
+      await logMessage(popupNumber, replyText.trim())
+      
       setShowSentAnimation(popupNumber)
       setReplyText("")
       setTimeout(() => {
