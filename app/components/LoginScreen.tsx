@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
+import { X } from "lucide-react"
 
 interface LoginScreenProps {
   onLogin: () => void
@@ -21,6 +22,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [emojis, setEmojis] = useState<BouncingEmoji[]>([])
+  const [showPopup1, setShowPopup1] = useState(false)
+  const [showPopup2, setShowPopup2] = useState(false)
+  const [showPopup3, setShowPopup3] = useState(false)
+  const [showPopup4, setShowPopup4] = useState(false)
 
   useEffect(() => {
     // Create initial emojis
@@ -64,8 +69,40 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
       )
     }, 1000 / 60) // 60 FPS
 
-    return () => clearInterval(animationFrame)
+    // Show first popup after 1 second
+    const timer = setTimeout(() => {
+      setShowPopup1(true)
+    }, 1000)
+
+    return () => {
+      clearInterval(animationFrame)
+      clearTimeout(timer)
+    }
   }, [])
+
+  const startPopupCycle = () => {
+    setShowPopup1(true)
+  }
+
+  const handleClosePopup1 = () => {
+    setShowPopup1(false)
+    setTimeout(() => setShowPopup2(true), 500)
+  }
+
+  const handleClosePopup2 = () => {
+    setShowPopup2(false)
+    setTimeout(() => setShowPopup3(true), 500)
+  }
+
+  const handleClosePopup3 = () => {
+    setShowPopup3(false)
+    setTimeout(() => setShowPopup4(true), 500)
+  }
+
+  const handleClosePopup4 = () => {
+    setShowPopup4(false)
+    setTimeout(() => setShowPopup1(true), 60000) // 60 seconds = 60000ms
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -78,12 +115,68 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-[#235ADC] overflow-hidden">
+    <div className="fixed inset-0 overflow-hidden" style={{
+      background: `linear-gradient(135deg, #FFE6EA 0%, #FFB6C1 50%, #FF69B4 100%)`,
+      backgroundSize: "400% 400%",
+      animation: "gradient 15s ease infinite"
+    }}>
+      <style jsx global>{`
+        @keyframes gradient {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+
+        @keyframes pixelate {
+          0% {
+            clip-path: inset(100% 100% 100% 100%);
+            transform: scale(0.5);
+            opacity: 0;
+          }
+          10% {
+            clip-path: inset(78% 82% 80% 81%);
+            transform: scale(0.6);
+            opacity: 0.2;
+          }
+          20% {
+            clip-path: inset(65% 68% 70% 65%);
+            transform: scale(0.7);
+            opacity: 0.4;
+          }
+          30% {
+            clip-path: inset(50% 52% 55% 50%);
+            transform: scale(0.8);
+            opacity: 0.6;
+          }
+          40% {
+            clip-path: inset(35% 38% 40% 35%);
+            transform: scale(0.9);
+            opacity: 0.8;
+          }
+          50% {
+            clip-path: inset(20% 22% 25% 20%);
+            transform: scale(0.95);
+            opacity: 0.9;
+          }
+          100% {
+            clip-path: inset(0 0 0 0);
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+      `}</style>
+
       {/* Bouncing emojis */}
       {emojis.map((emoji) => (
         <motion.div
           key={emoji.id}
-          className="absolute text-4xl pointer-events-none"
+          className="absolute text-4xl pointer-events-none drop-shadow-lg"
           style={{
             x: emoji.x,
             y: emoji.y,
@@ -95,41 +188,161 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         </motion.div>
       ))}
 
+      {/* First Popup - Top Right */}
+      {showPopup1 && (
+        <div className="fixed top-4 right-4 z-50">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-[#C0C0C0] border-2 border-[#808080] shadow-xl w-80 rounded"
+            style={{
+              animation: 'pixelate 0.4s steps(7, end)',
+              imageRendering: 'pixelated'
+            }}
+          >
+            <div className="bg-gradient-to-r from-[#000080] to-[#1084d0] px-2 py-1 flex justify-between items-center">
+              <span className="text-white text-sm font-bold font-['MS_Sans_Serif']">Message from: mika</span>
+              <button onClick={handleClosePopup1} className="text-white hover:bg-[#FF0000] p-1 rounded">
+                <X size={14} />
+              </button>
+            </div>
+            <div className="p-4 bg-[#ECE9D8] space-y-4">
+              <div className="text-sm font-['MS_Sans_Serif']">i need an extra 30 min</div>
+              <div className="flex justify-end">
+                <button onClick={handleClosePopup1} className="px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']">
+                  OK
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Second Popup - Bottom Left */}
+      {showPopup2 && (
+        <div className="fixed bottom-4 left-4 z-50">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-[#C0C0C0] border-2 border-[#808080] shadow-xl w-80 rounded"
+            style={{
+              animation: 'pixelate 0.4s steps(7, end)',
+              imageRendering: 'pixelated'
+            }}
+          >
+            <div className="bg-gradient-to-r from-[#000080] to-[#1084d0] px-2 py-1 flex justify-between items-center">
+              <span className="text-white text-sm font-bold font-['MS_Sans_Serif']">Message from: mika</span>
+              <button onClick={handleClosePopup2} className="text-white hover:bg-[#FF0000] p-1 rounded">
+                <X size={14} />
+              </button>
+            </div>
+            <div className="p-4 bg-[#ECE9D8] space-y-4">
+              <div className="text-sm font-['MS_Sans_Serif']">wyd</div>
+              <div className="flex justify-end">
+                <button onClick={handleClosePopup2} className="px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']">
+                  OK
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Third Popup - Bottom Right */}
+      {showPopup3 && (
+        <div className="fixed bottom-4 right-4 z-50">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-[#C0C0C0] border-2 border-[#808080] shadow-xl w-80 rounded"
+            style={{
+              animation: 'pixelate 0.4s steps(7, end)',
+              imageRendering: 'pixelated'
+            }}
+          >
+            <div className="bg-gradient-to-r from-[#000080] to-[#1084d0] px-2 py-1 flex justify-between items-center">
+              <span className="text-white text-sm font-bold font-['MS_Sans_Serif']">Message from: mika</span>
+              <button onClick={handleClosePopup3} className="text-white hover:bg-[#FF0000] p-1 rounded">
+                <X size={14} />
+              </button>
+            </div>
+            <div className="p-4 bg-[#ECE9D8] space-y-4">
+              <div className="text-sm font-['MS_Sans_Serif']">see you soon</div>
+              <div className="flex justify-end">
+                <button onClick={handleClosePopup3} className="px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']">
+                  OK
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Fourth Popup - Top Left */}
+      {showPopup4 && (
+        <div className="fixed top-4 left-4 z-50">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-[#C0C0C0] border-2 border-[#808080] shadow-xl w-80 rounded"
+            style={{
+              animation: 'pixelate 0.4s steps(7, end)',
+              imageRendering: 'pixelated'
+            }}
+          >
+            <div className="bg-gradient-to-r from-[#000080] to-[#1084d0] px-2 py-1 flex justify-between items-center">
+              <span className="text-white text-sm font-bold font-['MS_Sans_Serif']">Message from: mika</span>
+              <button onClick={handleClosePopup4} className="text-white hover:bg-[#FF0000] p-1 rounded">
+                <X size={14} />
+              </button>
+            </div>
+            <div className="p-4 bg-[#ECE9D8] space-y-4">
+              <div className="text-sm font-['MS_Sans_Serif']">🎸 🎮 🎧 🎬 🎨</div>
+              <div className="flex justify-end">
+                <button onClick={handleClosePopup4} className="px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']">
+                  OK
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       {/* Login form */}
       <div className="fixed inset-0 flex items-center justify-center">
-        <div className="bg-[#ECE9D8] border-2 border-[#0054E3] rounded-lg p-8 shadow-lg w-96">
+        <div className="bg-gradient-to-br from-[#F8F7FF] to-[#E8E6FF] border-4 border-[#9D8CFF] rounded-lg p-8 shadow-xl w-96">
           <div className="flex items-center mb-6">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-[#0054E3] to-[#2683FF] text-transparent bg-clip-text">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-[#7B6FFF] to-[#B4A8FF] text-transparent bg-clip-text">
               crushcultureOS
             </h1>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm mb-1">User name:</label>
+              <label className="block text-sm mb-1 text-[#6C5CE7] font-medium">User name:</label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#0054E3]"
+                className="w-full px-3 py-2 border-2 border-[#9D8CFF] rounded focus:outline-none focus:border-[#6C5CE7] bg-white/90 focus:ring-2 focus:ring-[#B4A8FF]/30"
                 autoComplete="off"
               />
             </div>
             <div>
-              <label className="block text-sm mb-1">Password:</label>
+              <label className="block text-sm mb-1 text-[#6C5CE7] font-medium">Password:</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#0054E3]"
+                className="w-full px-3 py-2 border-2 border-[#9D8CFF] rounded focus:outline-none focus:border-[#6C5CE7] bg-white/90 focus:ring-2 focus:ring-[#B4A8FF]/30"
               />
             </div>
             {error && (
-              <div className="text-red-500 text-sm">{error}</div>
+              <div className="text-[#D8548E] text-sm font-medium">{error}</div>
             )}
             <div className="flex justify-end pt-4">
               <button
                 type="submit"
-                className="xp-button"
+                className="px-6 py-2 bg-gradient-to-r from-[#7B6FFF] to-[#9D8CFF] text-white rounded hover:from-[#6C5CE7] hover:to-[#7B6FFF] transition-all duration-300 font-medium shadow-md active:scale-95"
               >
                 OK
               </button>
