@@ -7,6 +7,7 @@ import WindowsXPFrame from "./components/WindowsXPFrame"
 import StartButton from "./components/StartButton"
 import DesktopIcon from "./components/DesktopIcon"
 import StartMenu from "./components/StartMenu"
+import LoginScreen from "./components/LoginScreen"
 import type React from "react"
 
 export default function Home() {
@@ -18,7 +19,16 @@ export default function Home() {
   const [emojis, setEmojis] = useState<{ id: number; emoji: string; x: number; y: number }[]>([])
   const [showInitialAnimation, setShowInitialAnimation] = useState(false)
   const [showWarning, setShowWarning] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const controls = useAnimation()
+
+  // Check if user has logged in before
+  useEffect(() => {
+    const hasLoggedIn = localStorage.getItem("hasLoggedIn")
+    if (hasLoggedIn) {
+      setIsLoggedIn(true)
+    }
+  }, [])
 
   useEffect(() => {
     // Set up periodic warning popup
@@ -117,6 +127,25 @@ export default function Home() {
     }, 3000)
   }
 
+  const handleLogin = () => {
+    setIsLoggedIn(true)
+    localStorage.setItem("hasLoggedIn", "true")
+  }
+
+  const handleClose = () => {
+    setShowMenu(false)
+  }
+
+  const handleLogout = () => {
+    setIsLoggedIn(false)
+    localStorage.removeItem("hasLoggedIn")
+    setShowStartMenu(false)
+  }
+
+  if (!isLoggedIn) {
+    return <LoginScreen onLogin={handleLogin} />
+  }
+
   return (
     <main
       className="fixed inset-0 text-black flex flex-col items-center justify-center cursor-default"
@@ -149,7 +178,7 @@ export default function Home() {
       {/* Desktop icon */}
       {!showMenu && !showInitialAnimation && (
         <div className="absolute top-4 left-4">
-          <DesktopIcon emoji="💌" label="Valentine's Menu" onClick={handleOpenMenu} />
+          <DesktopIcon emoji="🪩" label="Valentine's Menu" onClick={handleOpenMenu} />
         </div>
       )}
 
@@ -193,7 +222,7 @@ export default function Home() {
 
       {showMenu && !isMinimized && (
         <WindowsXPFrame
-          onClose={() => setShowMenu(false)}
+          onClose={handleClose}
           onMinimize={() => setIsMinimized(true)}
           onMaximize={() => setIsMaximized(!isMaximized)}
           isMaximized={isMaximized}
@@ -264,6 +293,7 @@ export default function Home() {
               handleOpenMenu()
               setShowStartMenu(false)
             }}
+            onLogout={handleLogout}
           />
         </div>
       )}

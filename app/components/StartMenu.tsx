@@ -1,11 +1,14 @@
-import type React from "react"
+"use client"
+
+import React from "react"
 import { motion } from "framer-motion"
 
 interface StartMenuProps {
   onMenuClick: () => void
+  onLogout: () => void
 }
 
-const StartMenu: React.FC<StartMenuProps> = ({ onMenuClick }) => {
+const StartMenu: React.FC<StartMenuProps> = ({ onMenuClick, onLogout }) => {
   return (
     <motion.div
       className="fixed bottom-12 left-0 w-64 bg-[#ECE9D8] border-2 border-[#0054E3] shadow-lg z-50"
@@ -14,15 +17,22 @@ const StartMenu: React.FC<StartMenuProps> = ({ onMenuClick }) => {
       exit={{ opacity: 0, y: 20 }}
     >
       <div className="h-12 bg-gradient-to-r from-[#0054E3] to-[#2683FF] flex items-center px-4">
-        <span className="text-white font-bold">User: Spy</span>
+        <span className="text-white font-bold">crushcultureOS</span>
       </div>
-      <div className="p-2">
+      <div className="p-2 space-y-1">
         <button
           className="w-full text-left px-2 py-1 hover:bg-[#316AC5] hover:text-white rounded flex items-center"
           onClick={onMenuClick}
         >
           <span className="mr-2 text-2xl">💌</span>
           Valentine's Menu
+        </button>
+        <button
+          className="w-full text-left px-2 py-1 hover:bg-[#316AC5] hover:text-white rounded flex items-center"
+          onClick={onLogout}
+        >
+          <span className="mr-2 text-2xl">🔒</span>
+          Log Off
         </button>
       </div>
     </motion.div>
