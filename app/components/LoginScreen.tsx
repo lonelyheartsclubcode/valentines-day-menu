@@ -26,6 +26,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [showPopup2, setShowPopup2] = useState(false)
   const [showPopup3, setShowPopup3] = useState(false)
   const [showPopup4, setShowPopup4] = useState(false)
+  const [replyText, setReplyText] = useState("")
+  const [showSentAnimation, setShowSentAnimation] = useState(0)
 
   useEffect(() => {
     // Create initial emojis
@@ -104,6 +106,44 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     setTimeout(() => setShowPopup1(true), 60000) // 60 seconds = 60000ms
   }
 
+  const handleSendReply = (popupNumber: number) => {
+    if (replyText.trim()) {
+      setShowSentAnimation(popupNumber)
+      setReplyText("")
+      setTimeout(() => {
+        setShowSentAnimation(0)
+        switch(popupNumber) {
+          case 1:
+            handleClosePopup1()
+            break
+          case 2:
+            handleClosePopup2()
+            break
+          case 3:
+            handleClosePopup3()
+            break
+          case 4:
+            handleClosePopup4()
+            break
+        }
+      }, 1500)
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, popupNumber: number) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleSendReply(popupNumber)
+    }
+  }
+
+  const handleLoginKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleSubmit(e as any)
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (username.toLowerCase() === "nayu" && password === "vampkingmika") {
@@ -134,6 +174,44 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         }
 
         @keyframes pixelate {
+          0% {
+            clip-path: inset(100% 100% 100% 100%);
+            transform: scale(0.5);
+            opacity: 0;
+          }
+          10% {
+            clip-path: inset(78% 82% 80% 81%);
+            transform: scale(0.6);
+            opacity: 0.2;
+          }
+          20% {
+            clip-path: inset(65% 68% 70% 65%);
+            transform: scale(0.7);
+            opacity: 0.4;
+          }
+          30% {
+            clip-path: inset(50% 52% 55% 50%);
+            transform: scale(0.8);
+            opacity: 0.6;
+          }
+          40% {
+            clip-path: inset(35% 38% 40% 35%);
+            transform: scale(0.9);
+            opacity: 0.8;
+          }
+          50% {
+            clip-path: inset(20% 22% 25% 20%);
+            transform: scale(0.95);
+            opacity: 0.9;
+          }
+          100% {
+            clip-path: inset(0 0 0 0);
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        @keyframes y2kSendMessage {
           0% {
             clip-path: inset(100% 100% 100% 100%);
             transform: scale(0.5);
@@ -206,12 +284,47 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 <X size={14} />
               </button>
             </div>
-            <div className="p-4 bg-[#ECE9D8] space-y-4">
+            <div className="p-4 bg-[#ECE9D8] flex flex-col h-full relative">
               <div className="text-sm font-['MS_Sans_Serif']">i need an extra 30 min</div>
-              <div className="flex justify-end">
-                <button onClick={handleClosePopup1} className="px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']">
-                  OK
-                </button>
+              {showSentAnimation === 1 && (
+                <div className="absolute inset-0 flex items-center justify-center z-50">
+                  <div
+                    className="px-4 py-2 rounded-lg text-white text-sm font-['MS_Sans_Serif'] shadow-lg"
+                    style={{
+                      animation: 'pixelate 1.5s steps(7, end)',
+                      background: 'linear-gradient(-45deg, #FF61D8, #9F53FF, #00FFFF, #5EFF53)',
+                      backgroundSize: '300% 300%',
+                      imageRendering: 'pixelated'
+                    }}
+                  >
+                    Message Sent!
+                  </div>
+                </div>
+              )}
+              <div className="flex flex-col flex-grow mt-4">
+                <div className="flex h-full space-x-2">
+                  <textarea
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    onKeyPress={(e) => handleKeyPress(e as any, 1)}
+                    className="flex-1 px-2 py-1 border border-[#808080] bg-white text-sm font-['MS_Sans_Serif'] resize-none"
+                    placeholder="Type your reply..."
+                  />
+                  <div className="flex flex-col justify-between">
+                    <button
+                      onClick={() => handleSendReply(1)}
+                      className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
+                    >
+                      Send
+                    </button>
+                    <button 
+                      onClick={handleClosePopup1} 
+                      className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -236,12 +349,47 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 <X size={14} />
               </button>
             </div>
-            <div className="p-4 bg-[#ECE9D8] space-y-4">
+            <div className="p-4 bg-[#ECE9D8] flex flex-col h-full relative">
               <div className="text-sm font-['MS_Sans_Serif']">wyd</div>
-              <div className="flex justify-end">
-                <button onClick={handleClosePopup2} className="px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']">
-                  OK
-                </button>
+              {showSentAnimation === 2 && (
+                <div className="absolute inset-0 flex items-center justify-center z-50">
+                  <div
+                    className="px-4 py-2 rounded-lg text-white text-sm font-['MS_Sans_Serif'] shadow-lg"
+                    style={{
+                      animation: 'pixelate 1.5s steps(7, end)',
+                      background: 'linear-gradient(-45deg, #FF61D8, #9F53FF, #00FFFF, #5EFF53)',
+                      backgroundSize: '300% 300%',
+                      imageRendering: 'pixelated'
+                    }}
+                  >
+                    Message Sent!
+                  </div>
+                </div>
+              )}
+              <div className="flex flex-col flex-grow mt-4">
+                <div className="flex h-full space-x-2">
+                  <textarea
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    onKeyPress={(e) => handleKeyPress(e as any, 2)}
+                    className="flex-1 px-2 py-1 border border-[#808080] bg-white text-sm font-['MS_Sans_Serif'] resize-none"
+                    placeholder="Type your reply..."
+                  />
+                  <div className="flex flex-col justify-between">
+                    <button
+                      onClick={() => handleSendReply(2)}
+                      className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
+                    >
+                      Send
+                    </button>
+                    <button 
+                      onClick={handleClosePopup2} 
+                      className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -266,12 +414,47 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 <X size={14} />
               </button>
             </div>
-            <div className="p-4 bg-[#ECE9D8] space-y-4">
+            <div className="p-4 bg-[#ECE9D8] flex flex-col h-full relative">
               <div className="text-sm font-['MS_Sans_Serif']">see you soon</div>
-              <div className="flex justify-end">
-                <button onClick={handleClosePopup3} className="px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']">
-                  OK
-                </button>
+              {showSentAnimation === 3 && (
+                <div className="absolute inset-0 flex items-center justify-center z-50">
+                  <div
+                    className="px-4 py-2 rounded-lg text-white text-sm font-['MS_Sans_Serif'] shadow-lg"
+                    style={{
+                      animation: 'pixelate 1.5s steps(7, end)',
+                      background: 'linear-gradient(-45deg, #FF61D8, #9F53FF, #00FFFF, #5EFF53)',
+                      backgroundSize: '300% 300%',
+                      imageRendering: 'pixelated'
+                    }}
+                  >
+                    Message Sent!
+                  </div>
+                </div>
+              )}
+              <div className="flex flex-col flex-grow mt-4">
+                <div className="flex h-full space-x-2">
+                  <textarea
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    onKeyPress={(e) => handleKeyPress(e as any, 3)}
+                    className="flex-1 px-2 py-1 border border-[#808080] bg-white text-sm font-['MS_Sans_Serif'] resize-none"
+                    placeholder="Type your reply..."
+                  />
+                  <div className="flex flex-col justify-between">
+                    <button
+                      onClick={() => handleSendReply(3)}
+                      className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
+                    >
+                      Send
+                    </button>
+                    <button 
+                      onClick={handleClosePopup3} 
+                      className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -296,12 +479,47 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 <X size={14} />
               </button>
             </div>
-            <div className="p-4 bg-[#ECE9D8] space-y-4">
+            <div className="p-4 bg-[#ECE9D8] flex flex-col h-full relative">
               <div className="text-sm font-['MS_Sans_Serif']">🎸 🎮 🎧 🎬 🎨</div>
-              <div className="flex justify-end">
-                <button onClick={handleClosePopup4} className="px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']">
-                  OK
-                </button>
+              {showSentAnimation === 4 && (
+                <div className="absolute inset-0 flex items-center justify-center z-50">
+                  <div
+                    className="px-4 py-2 rounded-lg text-white text-sm font-['MS_Sans_Serif'] shadow-lg"
+                    style={{
+                      animation: 'pixelate 1.5s steps(7, end)',
+                      background: 'linear-gradient(-45deg, #FF61D8, #9F53FF, #00FFFF, #5EFF53)',
+                      backgroundSize: '300% 300%',
+                      imageRendering: 'pixelated'
+                    }}
+                  >
+                    Message Sent!
+                  </div>
+                </div>
+              )}
+              <div className="flex flex-col flex-grow mt-4">
+                <div className="flex h-full space-x-2">
+                  <textarea
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    onKeyPress={(e) => handleKeyPress(e as any, 4)}
+                    className="flex-1 px-2 py-1 border border-[#808080] bg-white text-sm font-['MS_Sans_Serif'] resize-none"
+                    placeholder="Type your reply..."
+                  />
+                  <div className="flex flex-col justify-between">
+                    <button
+                      onClick={() => handleSendReply(4)}
+                      className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
+                    >
+                      Send
+                    </button>
+                    <button 
+                      onClick={handleClosePopup4} 
+                      className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -323,6 +541,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                onKeyPress={handleLoginKeyPress}
                 className="w-full px-3 py-2 border-2 border-[#9D8CFF] rounded focus:outline-none focus:border-[#6C5CE7] bg-white/90 focus:ring-2 focus:ring-[#B4A8FF]/30"
                 autoComplete="off"
               />
@@ -333,6 +552,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyPress={handleLoginKeyPress}
                 className="w-full px-3 py-2 border-2 border-[#9D8CFF] rounded focus:outline-none focus:border-[#6C5CE7] bg-white/90 focus:ring-2 focus:ring-[#B4A8FF]/30"
               />
             </div>
@@ -342,7 +562,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             <div className="flex justify-end pt-4">
               <button
                 type="submit"
-                className="px-6 py-2 bg-gradient-to-r from-[#7B6FFF] to-[#9D8CFF] text-white rounded hover:from-[#6C5CE7] hover:to-[#7B6FFF] transition-all duration-300 font-medium shadow-md active:scale-95"
+                className="px-6 py-2 bg-gradient-to-r from-[#7B6FFF] to-[#9D8CFF] text-white font-['MS_Sans_Serif'] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] border border-[#404040] active:border-[#202020] hover:from-[#6C5CE7] hover:to-[#7B6FFF]"
               >
                 OK
               </button>
