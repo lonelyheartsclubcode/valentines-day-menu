@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/server'
 
 export const runtime = 'edge'
 
-export const alt = 'Valentine\'s Day Menu Preview'
+export const alt = 'crushcultureOS'
 export const size = {
   width: 1200,
   height: 630,

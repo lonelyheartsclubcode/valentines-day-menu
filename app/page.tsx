@@ -178,7 +178,7 @@ export default function Home() {
       {/* Desktop icon */}
       {!showMenu && !showInitialAnimation && (
         <div className="absolute top-4 left-4">
-          <DesktopIcon emoji="🪩" label="Valentine's Menu" onClick={handleOpenMenu} />
+          <DesktopIcon emoji="💌" label="Valentine's Menu" onClick={handleOpenMenu} />
         </div>
       )}
 

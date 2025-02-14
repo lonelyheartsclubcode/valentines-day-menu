@@ -6,27 +6,27 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
 
 export const metadata = {
-  title: "Valentine's Menu",
-  description: "A special Valentine's Day menu with a selection of romantic dishes including Salmon Sashimi, Miso-Glazed Black Cod, and Matcha Crème Brûlée.",
+  title: "crushcultureOS",
+  description: "crushcultureOS",
   icons: {
     icon: [
       {
-        url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">😍</text></svg>',
+        url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🪩</text></svg>',
         type: 'image/svg+xml',
       },
     ],
   },
   openGraph: {
-    title: "Valentine's Day Menu 💝",
-    description: "A special Valentine's Day menu with a selection of romantic dishes including Salmon Sashimi, Miso-Glazed Black Cod, and Matcha Crème Brûlée.",
+    title: "crushcultureOS",
+    description: "crushcultureOS",
     type: "website",
-    siteName: "Valentine's Menu",
+    siteName: "crushcultureOS",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Valentine's Day Menu 💝",
-    description: "A special Valentine's Day menu with a selection of romantic dishes including Salmon Sashimi, Miso-Glazed Black Cod, and Matcha Crème Brûlée.",
-    creator: "@nayu",
+    title: "crushcultureOS",
+    description: "crushcultureOS",
+    creator: "@lonelyheartsclubcode",
   },
 }
 
