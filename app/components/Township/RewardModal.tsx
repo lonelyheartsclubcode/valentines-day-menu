@@ -36,9 +36,9 @@ const RewardModal: React.FC<RewardModalProps> = ({ onClose }) => {
 
                     <div className="bg-gray-100 p-4 rounded-lg w-full mb-6 border-dashed border-2 border-gray-300">
                         <p className="font-mono text-lg font-bold text-gray-800 select-all">
-                            XMAS-2025-LOVE-NAYU
+                            X9Q7JY7LFPHCFVMT
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">(Not a real code, check your DMs! 😉)</p>
+                        <p className="text-xs text-gray-500 mt-1">Redeem at apple.com/redeem</p>
                     </div>
 
                     <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-left w-full">

@@ -205,7 +205,7 @@ export default function Home() {
           onClick={handleOpenMenu} 
         />
         <DesktopIcon emoji="🏘️" label="Township" onClick={handleOpenTownship} />
-        <DesktopIcon emoji="💝" label="Love Note" onClick={() => setShowLoveNote(true)} />
+        <DesktopIcon emoji="🎄" label="Christmas Note" onClick={() => setShowLoveNote(true)} />
         <DesktopIcon emoji={theme === 'valentine' ? '🎄' : '💖'} label={theme === 'valentine' ? 'Xmas Mode' : 'Love Mode'} onClick={toggleTheme} />
       </div>
 

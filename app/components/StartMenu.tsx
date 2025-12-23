@@ -36,8 +36,8 @@ const StartMenu: React.FC<StartMenuProps> = ({ onMenuClick, onLoveNote, onLogout
           className="w-full text-left px-2 py-1 hover:bg-[#316AC5] hover:text-white rounded flex items-center"
           onClick={onLoveNote}
         >
-          <span className="mr-2 text-2xl">💝</span>
-          Love Note
+          <span className="mr-2 text-2xl">🎄</span>
+          Christmas Note
         </button>
         <button
           className="w-full text-left px-2 py-1 hover:bg-[#316AC5] hover:text-white rounded flex items-center"

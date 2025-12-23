@@ -106,7 +106,7 @@ const LoveNote: React.FC<LoveNoteProps> = ({ onClose }) => {
       >
         {/* Title bar */}
         <div className="bg-gradient-to-r from-[#7B6FFF] to-[#9D8CFF] px-2 py-1 flex justify-between items-center">
-          <span className="text-white text-sm font-bold">for nayu</span>
+          <span className="text-white text-sm font-bold">christmas note</span>
           <div className="flex items-center gap-1">
             {!isPlaying && (
               <button
@@ -133,23 +133,19 @@ const LoveNote: React.FC<LoveNoteProps> = ({ onClose }) => {
           {/* Letter */}
           <div className="text-sm text-gray-800 space-y-4 mb-6">
             <p>
-              I kept trying to write something. Kept deleting it.
+              Merry Christmas.
             </p>
 
             <p>
-              I like my life more with you in it. That's the thing.
+              This year changed everything. You changed everything.
             </p>
 
             <p>
-              The ordinary stuff especially. Morning coffee. Walking around. Doing nothing.
+              I wasn't expecting you. Any of this really.
             </p>
 
             <p>
-              You make me laugh. You make me think. Sometimes you drive me a little crazy but I like that too.
-            </p>
-
-            <p>
-              I'm not good at this. But I wanted you to know.
+              But I'm glad it happened. I like who I am with you.
             </p>
 
             <p className="text-[#7B6FFF] font-medium pt-2">
