@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react'
 import { motion } from "framer-motion"
-import { Heart } from "lucide-react"
+import { Heart, Snowflake } from "lucide-react"
+import { useTheme } from '../context/ThemeContext'
 
 const menuItems = [
   {
@@ -49,6 +50,16 @@ const drinkPairings = [
 
 const Menu: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'menu' | 'drinks'>('menu')
+  const { theme } = useTheme()
+  const isChristmas = theme === 'christmas'
+
+  const primaryColor = isChristmas ? 'text-red-700' : 'text-rose-800'
+  const secondaryColor = isChristmas ? 'text-green-700' : 'text-rose-600'
+  const accentColor = isChristmas ? 'text-red-500' : 'text-rose-500'
+  const buttonActive = isChristmas ? 'bg-red-600' : 'bg-rose-500'
+  const buttonInactive = isChristmas ? 'text-green-700 hover:bg-green-100' : 'text-rose-600 hover:bg-rose-100'
+  const bgTab = isChristmas ? 'bg-green-50' : 'bg-rose-50'
+  const borderColor = isChristmas ? 'border-green-200' : 'border-rose-200'
 
   return (
     <motion.div
@@ -59,24 +70,26 @@ const Menu: React.FC = () => {
       className="flex flex-col min-h-full"
     >
       <div className="text-center mb-6">
-        <h1 className="text-4xl md:text-5xl font-serif text-rose-800 mb-2">Valentine&apos;s Day</h1>
-        <h2 className="text-2xl md:text-3xl font-serif text-rose-600">Prix Fixe Menu</h2>
+        <h1 className={`text-4xl md:text-5xl font-serif ${primaryColor} mb-2`}>
+          {isChristmas ? "Christmas Day" : "Valentine's Day"}
+        </h1>
+        <h2 className={`text-2xl md:text-3xl font-serif ${secondaryColor}`}>Prix Fixe Menu</h2>
         <div className="flex justify-center items-center mt-2">
-          <Heart className="text-rose-500 mr-2" size={20} />
-          <span className="text-rose-600 font-serif text-lg">for Nayu</span>
-          <Heart className="text-rose-500 ml-2" size={20} />
+          {isChristmas ? <Snowflake className={`${accentColor} mr-2`} size={20} /> : <Heart className={`${accentColor} mr-2`} size={20} />}
+          <span className={`${secondaryColor} font-serif text-lg`}>for Nayu</span>
+          {isChristmas ? <Snowflake className={`${accentColor} ml-2`} size={20} /> : <Heart className={`${accentColor} ml-2`} size={20} />}
         </div>
       </div>
 
       {/* Tabs */}
       <div className="flex justify-center mb-6">
-        <div className="flex space-x-2 bg-rose-50 rounded-lg p-1">
+        <div className={`flex space-x-2 ${bgTab} rounded-lg p-1`}>
           <button
             onClick={() => setActiveTab('menu')}
             className={`px-4 py-2 rounded-md transition-all duration-200 ${
               activeTab === 'menu'
-                ? 'bg-rose-500 text-white shadow-md'
-                : 'text-rose-600 hover:bg-rose-100'
+                ? `${buttonActive} text-white shadow-md`
+                : buttonInactive
             }`}
           >
             Menu
@@ -85,8 +98,8 @@ const Menu: React.FC = () => {
             onClick={() => setActiveTab('drinks')}
             className={`px-4 py-2 rounded-md transition-all duration-200 ${
               activeTab === 'drinks'
-                ? 'bg-rose-500 text-white shadow-md'
-                : 'text-rose-600 hover:bg-rose-100'
+                ? `${buttonActive} text-white shadow-md`
+                : buttonInactive
             }`}
           >
             Drink Pairings
@@ -108,12 +121,12 @@ const Menu: React.FC = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 + 0.3 }}
-              className="border-b border-rose-200 pb-4 last:border-b-0"
+              className={`border-b ${borderColor} pb-4 last:border-b-0`}
             >
-              <h3 className="text-xl md:text-2xl font-serif font-semibold mb-2 text-rose-800 leading-tight">
+              <h3 className={`text-xl md:text-2xl font-serif font-semibold mb-2 ${primaryColor} leading-tight`}>
                 {item.name}
               </h3>
-              <p className="text-rose-600 italic text-base md:text-lg leading-relaxed">
+              <p className={`${secondaryColor} italic text-base md:text-lg leading-relaxed`}>
                 {item.description}
               </p>
             </motion.div>
@@ -135,16 +148,16 @@ const Menu: React.FC = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 + 0.3 }}
-              className="border-b border-rose-200 pb-6 last:border-b-0"
+              className={`border-b ${borderColor} pb-6 last:border-b-0`}
             >
-              <h3 className="text-xl md:text-2xl font-serif font-semibold mb-2 text-rose-800 leading-tight">
+              <h3 className={`text-xl md:text-2xl font-serif font-semibold mb-2 ${primaryColor} leading-tight`}>
                 {pairing.dish}
               </h3>
               <div className="ml-4">
-                <p className="text-rose-700 font-medium mb-2">
+                <p className={`${secondaryColor} font-medium mb-2`}>
                   Pair with: {pairing.drink}
                 </p>
-                <p className="text-rose-600 italic text-base md:text-lg leading-relaxed">
+                <p className={`${secondaryColor} italic text-base md:text-lg leading-relaxed`}>
                   {pairing.description}
                 </p>
               </div>
@@ -154,7 +167,7 @@ const Menu: React.FC = () => {
       )}
 
       <motion.div 
-        className="text-center text-rose-600 font-serif text-lg mt-6 pb-4"
+        className={`text-center ${secondaryColor} font-serif text-lg mt-6 pb-4`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
@@ -166,4 +179,3 @@ const Menu: React.FC = () => {
 }
 
 export default Menu
-

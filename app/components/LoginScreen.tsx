@@ -7,6 +7,8 @@ import { supabase, type MessageLog } from '@/lib/supabase'
 
 interface LoginScreenProps {
   onLogin: () => void
+  theme: 'valentine' | 'christmas'
+  onToggleTheme: () => void
 }
 
 interface BouncingEmoji {
@@ -18,7 +20,7 @@ interface BouncingEmoji {
   velocityY: number
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, theme, onToggleTheme }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -37,7 +39,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
       id: i,
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      emoji: i % 2 === 0 ? "💿" : "❤️", // CD and heart
+      emoji: theme === 'valentine'
+        ? (i % 2 === 0 ? "💿" : "❤️")
+        : (i % 2 === 0 ? "❄️" : "🎄"),
       velocityX: (Math.random() - 0.5) * 4,
       velocityY: (Math.random() - 0.5) * 4,
     }))
@@ -45,7 +49,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 
     // Animation loop with rotation for disco ball
     const animationFrame = setInterval(() => {
-      setEmojis((prevEmojis) =>
+      setEmojis((prevEmojis: BouncingEmoji[]) =>
         prevEmojis.map((emoji) => {
           let newX = emoji.x + emoji.velocityX
           let newY = emoji.y + emoji.velocityY
@@ -82,7 +86,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
       clearInterval(animationFrame)
       clearTimeout(timer)
     }
-  }, [])
+  }, [theme])
 
   const startPopupCycle = () => {
     setShowPopup1(true)
@@ -109,7 +113,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   }
 
   const getMessageContent = (popupNumber: number): string => {
-    switch(popupNumber) {
+    switch (popupNumber) {
       case 1:
         return "i need an extra 30 min"
       case 2:
@@ -127,19 +131,19 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     const now = new Date()
     const timestamp = now.toLocaleString()
     const originalMessage = getMessageContent(messageNumber)
-    
+
     const newLog: MessageLog = {
       timestamp,
       original_message: originalMessage,
       response,
       message_number: messageNumber
     }
-    
+
     try {
       const { error } = await supabase
         .from('message_logs')
         .insert(newLog)
-      
+
       if (error) {
         console.error('Error logging message:', error)
       }
@@ -152,12 +156,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     if (replyText.trim()) {
       // Log the message before clearing the reply text
       await logMessage(popupNumber, replyText.trim())
-      
+
       setShowSentAnimation(popupNumber)
       setReplyText("")
       setTimeout(() => {
         setShowSentAnimation(0)
-        switch(popupNumber) {
+        switch (popupNumber) {
           case 1:
             handleClosePopup1()
             break
@@ -175,7 +179,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, popupNumber: number) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>, popupNumber: number) => {
     if (e.key === 'Enter') {
       e.preventDefault()
       handleSendReply(popupNumber)
@@ -185,7 +189,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const handleLoginKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
-      handleSubmit(e as any)
+      handleSubmit(e as unknown as React.FormEvent)
     }
   }
 
@@ -201,7 +205,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 
   return (
     <div className="fixed inset-0 overflow-hidden" style={{
-      background: `linear-gradient(135deg, #FFE6EA 0%, #FFB6C1 50%, #FF69B4 100%)`,
+      background: theme === 'valentine'
+        ? `linear-gradient(135deg, #FFE6EA 0%, #FFB1C1 50%, #FF69B4 100%)`
+        : `linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 50%, #81D4FA 100%)`,
       backgroundSize: "400% 400%",
       animation: "gradient 15s ease infinite"
     }}>
@@ -295,6 +301,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         }
       `}</style>
 
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4 z-[100]">
+        <button
+          onClick={onToggleTheme}
+          className="bg-white/50 hover:bg-white/80 p-2 rounded-full text-2xl transition-all"
+          title={theme === 'valentine' ? "Switch to Christmas Mode" : "Switch to Valentine Mode"}
+        >
+          {theme === 'valentine' ? '🎄' : '💖'}
+        </button>
+      </div>
+
       {/* Bouncing emojis */}
       {emojis.map((emoji) => (
         <motion.div
@@ -362,8 +379,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                     >
                       Send
                     </button>
-                    <button 
-                      onClick={handleClosePopup1} 
+                    <button
+                      onClick={handleClosePopup1}
                       className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
                     >
                       Close
@@ -427,8 +444,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                     >
                       Send
                     </button>
-                    <button 
-                      onClick={handleClosePopup2} 
+                    <button
+                      onClick={handleClosePopup2}
                       className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
                     >
                       Close
@@ -492,8 +509,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                     >
                       Send
                     </button>
-                    <button 
-                      onClick={handleClosePopup3} 
+                    <button
+                      onClick={handleClosePopup3}
                       className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
                     >
                       Close
@@ -557,8 +574,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                     >
                       Send
                     </button>
-                    <button 
-                      onClick={handleClosePopup4} 
+                    <button
+                      onClick={handleClosePopup4}
                       className="w-[76px] px-4 py-1 bg-[#C0C0C0] border border-[#808080] active:border-[#404040] shadow-[inset_-1px_-1px_#404040,inset_1px_1px_#fff] active:shadow-[inset_1px_1px_#404040] text-sm font-['MS_Sans_Serif']"
                     >
                       Close

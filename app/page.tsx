@@ -8,18 +8,30 @@ import StartButton from "./components/StartButton"
 import DesktopIcon from "./components/DesktopIcon"
 import StartMenu from "./components/StartMenu"
 import LoginScreen from "./components/LoginScreen"
+import TownshipGame from "./components/Township/TownshipGame"
+import { useWindowManager } from "../hooks/useWindowManager"
 import type React from "react"
 
+import { ThemeContext } from "./context/ThemeContext"
+
 export default function Home() {
-  const [showMenu, setShowMenu] = useState(false)
-  const [isMinimized, setIsMinimized] = useState(false)
-  const [isMaximized, setIsMaximized] = useState(false)
+  const {
+    windows,
+    activeWindowId,
+    openWindow,
+    closeWindow,
+    minimizeWindow,
+    maximizeWindow,
+    focusWindow
+  } = useWindowManager()
+
   const [showStartMenu, setShowStartMenu] = useState(false)
   const [hearts, setHearts] = useState<{ id: number; x: number; y: number }[]>([])
   const [emojis, setEmojis] = useState<{ id: number; emoji: string; x: number; y: number }[]>([])
   const [showInitialAnimation, setShowInitialAnimation] = useState(false)
   const [showWarning, setShowWarning] = useState(true)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [theme, setTheme] = useState<'valentine' | 'christmas'>('valentine')
   const controls = useAnimation()
 
   // Check if user has logged in before
@@ -35,10 +47,10 @@ export default function Home() {
     const showWarningPeriodically = () => {
       setShowWarning(true)
     }
-    
+
     // Show warning every minute
     const warningInterval = setInterval(showWarningPeriodically, 60000)
-    
+
     // Cleanup interval on unmount
     return () => clearInterval(warningInterval)
   }, [])
@@ -52,31 +64,28 @@ export default function Home() {
     showPopup()
   }, [controls])
 
-  useEffect(() => {
-    if (showMenu && !isMinimized) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [showMenu, isMinimized]);
-
   const handleTap = (event: React.MouseEvent | React.TouchEvent) => {
     // Don't close start menu if clicking within it or on the start button
     const target = event.target as HTMLElement;
     if (target.closest('[data-start-menu="true"]') || target.closest('[data-start-button="true"]')) {
       return;
     }
-    
+
     if (showStartMenu) setShowStartMenu(false)
 
-    const { clientX, clientY } = "touches" in event ? event.touches[0] : event
+    let clientX, clientY;
+    if ("touches" in event) {
+      clientX = event.touches[0].clientX;
+      clientY = event.touches[0].clientY;
+    } else {
+      clientX = (event as React.MouseEvent).clientX;
+      clientY = (event as React.MouseEvent).clientY;
+    }
+
     const newHeart = { id: Date.now(), x: clientX, y: clientY }
-    setHearts((prevHearts) => [...prevHearts, newHeart])
+    setHearts((prevHearts: { id: number; x: number; y: number }[]) => [...prevHearts, newHeart])
     setTimeout(() => {
-      setHearts((prevHearts) => prevHearts.filter((heart) => heart.id !== newHeart.id))
+      setHearts((prevHearts: { id: number; x: number; y: number }[]) => prevHearts.filter((heart) => heart.id !== newHeart.id))
     }, 1000)
   }
 
@@ -94,9 +103,9 @@ export default function Home() {
       y: centerY,
     }
 
-    setEmojis((prevEmojis) => [...prevEmojis, newEmoji])
+    setEmojis((prevEmojis: { id: number; emoji: string; x: number; y: number }[]) => [...prevEmojis, newEmoji])
     setTimeout(() => {
-      setEmojis((prevEmojis) => prevEmojis.filter((e) => e.id !== newEmoji.id))
+      setEmojis((prevEmojis: { id: number; emoji: string; x: number; y: number }[]) => prevEmojis.filter((e) => e.id !== newEmoji.id))
     }, 2000)
   }
 
@@ -104,9 +113,17 @@ export default function Home() {
     setShowInitialAnimation(true)
     setTimeout(() => {
       setShowInitialAnimation(false)
-      setShowMenu(true)
-      setIsMaximized(true) // Ensure it starts in windowed mode
-    }, 3000) // Increased duration for more emojis to show
+      openWindow(
+        'menu',
+        theme === 'christmas' ? "Christmas Menu" : "Valentine's Menu",
+        <Menu />,
+        theme === 'christmas' ? '🎄' : '💌'
+      )
+    }, 3000)
+  }
+
+  const handleOpenTownship = () => {
+    openWindow('township', "Township", <TownshipGame />, '🏘️')
   }
 
   const handleWarningClick = () => {
@@ -119,11 +136,11 @@ export default function Home() {
       y: (Math.random() * 0.7 + 0.1) * (window.innerHeight - 100), // Keep within middle 70% of screen, avoid taskbar
       delay: i * 50, // Stagger the animations
     }))
-    setEmojis((prev) => [...prev, ...newEmojis])
-    
+    setEmojis((prev: { id: number; emoji: string; x: number; y: number }[]) => [...prev, ...newEmojis])
+
     // Remove emojis after animation
     setTimeout(() => {
-      setEmojis((prev) => prev.filter(e => !newEmojis.find(ne => ne.id === e.id)))
+      setEmojis((prev: { id: number; emoji: string; x: number; y: number }[]) => prev.filter(e => !newEmojis.find(ne => ne.id === e.id)))
     }, 3000)
   }
 
@@ -132,27 +149,30 @@ export default function Home() {
     localStorage.setItem("hasLoggedIn", "true")
   }
 
-  const handleClose = () => {
-    setShowMenu(false)
-  }
-
   const handleLogout = () => {
     setIsLoggedIn(false)
     localStorage.removeItem("hasLoggedIn")
     setShowStartMenu(false)
   }
 
+  const toggleTheme = () => {
+    setTheme((prev: 'valentine' | 'christmas') => prev === 'valentine' ? 'christmas' : 'valentine')
+  }
+
   if (!isLoggedIn) {
-    return <LoginScreen onLogin={handleLogin} />
+    return <LoginScreen onLogin={handleLogin} theme={theme} onToggleTheme={toggleTheme} />
   }
 
   return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
     <main
       className="fixed inset-0 text-black flex flex-col items-center justify-center cursor-default"
       onClick={handleTap}
       onTouchStart={handleTap}
       style={{
-        backgroundImage: `url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/windows_98_x_windows_xp_by_windowsartist2009_dh9kb4u-pre.jpg-tYFhyigbvwRrjP9gV03kfnyTPiwp1K.jpeg')`,
+        backgroundImage: theme === 'valentine'
+          ? `url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/windows_98_x_windows_xp_by_windowsartist2009_dh9kb4u-pre.jpg-tYFhyigbvwRrjP9gV03kfnyTPiwp1K.jpeg')`
+          : `url('/christmas_desktop.png')`, // Updated to use local file
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -167,7 +187,7 @@ export default function Home() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed top-4 left-1/2 -translate-x-1/2 bg-yellow-100 border-2 border-yellow-400 px-4 py-2 rounded shadow-lg cursor-pointer z-50 flex items-center hover:bg-yellow-50 active:bg-yellow-200"
+          className="fixed top-4 left-1/2 -translate-x-1/2 bg-yellow-100 border-2 border-yellow-400 px-4 py-2 rounded shadow-lg cursor-pointer z-[2000] flex items-center hover:bg-yellow-50 active:bg-yellow-200"
           onClick={handleWarningClick}
         >
           <span className="text-2xl mr-2 animate-bounce">⚠️</span>
@@ -175,19 +195,23 @@ export default function Home() {
         </motion.div>
       )}
 
-      {/* Desktop icon */}
-      {!showMenu && !showInitialAnimation && (
-        <div className="absolute top-4 left-4">
-          <DesktopIcon emoji="💌" label="Valentine's Menu" onClick={handleOpenMenu} />
-        </div>
-      )}
+      {/* Desktop icons */}
+      <div className="absolute top-4 left-4 flex flex-col gap-4">
+        <DesktopIcon 
+          emoji={theme === 'christmas' ? '🎄' : '💌'} 
+          label={theme === 'christmas' ? "Christmas Menu" : "Valentine's Menu"} 
+          onClick={handleOpenMenu} 
+        />
+        <DesktopIcon emoji="🏘️" label="Township" onClick={handleOpenTownship} />
+        <DesktopIcon emoji={theme === 'valentine' ? '🎄' : '💖'} label={theme === 'valentine' ? 'Xmas Mode' : 'Love Mode'} onClick={toggleTheme} />
+      </div>
 
       {showInitialAnimation && (
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="text-4xl md:text-6xl font-serif text-center text-rose-700 flex flex-col items-center justify-center bg-white/90 p-8 rounded-lg"
+          className="text-4xl md:text-6xl font-serif text-center text-rose-700 flex flex-col items-center justify-center bg-white/90 p-8 rounded-lg z-[2000]"
         >
           <div className="flex items-center">
             Valentine&apos;s Day Menu for Nayu
@@ -220,21 +244,39 @@ export default function Home() {
         </motion.div>
       )}
 
-      {showMenu && !isMinimized && (
-        <WindowsXPFrame
-          onClose={handleClose}
-          onMinimize={() => setIsMinimized(true)}
-          onMaximize={() => setIsMaximized(!isMaximized)}
-          isMaximized={isMaximized}
+      {/* Windows */}
+      {windows.map((window) => (
+        window.isOpen && (
+        <div
+          key={window.id}
+          style={{
+            display: window.isMinimized ? 'none' : 'block',
+            zIndex: window.zIndex
+          }}
         >
-          <Menu />
-        </WindowsXPFrame>
-      )}
+          <WindowsXPFrame
+            title={window.title}
+            onClose={() => closeWindow(window.id)}
+            onMinimize={() => minimizeWindow(window.id)}
+            onMaximize={() => maximizeWindow(window.id)}
+            onFocus={() => focusWindow(window.id)}
+            isMaximized={window.isMaximized}
+            style={{
+              // Add random offset for new windows if not maximized
+              left: window.isMaximized ? 0 : `${20 + (windows.indexOf(window) * 2)}%`,
+              top: window.isMaximized ? 0 : `${10 + (windows.indexOf(window) * 2)}%`,
+            }}
+          >
+            {window.content}
+          </WindowsXPFrame>
+        </div>
+        )
+      ))}
 
       {hearts.map((heart) => (
         <motion.div
           key={heart.id}
-          className="absolute pointer-events-none text-2xl z-50"
+          className="absolute pointer-events-none text-2xl z-[9999]"
           initial={{ x: heart.x, y: heart.y, scale: 0 }}
           animate={{ y: heart.y - 100, scale: 1, opacity: [1, 0] }}
           transition={{ duration: 1 }}
@@ -246,7 +288,7 @@ export default function Home() {
       {emojis.map((emoji) => (
         <motion.div
           key={emoji.id}
-          className="fixed pointer-events-none text-6xl z-50"
+          className="fixed pointer-events-none text-6xl z-[9999]"
           style={{ left: "50%", top: "50%" }}
           initial={{ x: "-50%", y: "-50%", scale: 0, rotate: 0 }}
           animate={{
@@ -261,28 +303,44 @@ export default function Home() {
       ))}
 
       {/* Taskbar */}
-      <div className="fixed bottom-0 left-0 right-0 h-12 bg-gradient-to-r from-[#245EDC] to-[#3C8BF5] flex items-center px-2 z-50">
+      <div className="fixed bottom-0 left-0 right-0 h-12 bg-gradient-to-r from-[#245EDC] to-[#3C8BF5] flex items-center px-2 z-[9999]">
         <StartButton onClick={() => setShowStartMenu(!showStartMenu)} />
-        {showMenu && isMinimized && (
-          <button
-            className="ml-2 px-4 h-8 bg-[#3C8BF5] hover:bg-[#4C9BFF] text-white text-sm rounded-sm flex items-center"
-            onClick={() => setIsMinimized(false)}
-          >
-            <span className="mr-2">💌</span>
-            Valentine's Menu
-          </button>
-        )}
-        <div className="flex-grow" />
-        {["😍", "💖", "🌹", "🍫", "🎁"].map((emoji) => (
-          <button
-            key={emoji}
-            className="mx-1 text-2xl hover:bg-[#3C8BF5] rounded p-1 transition-colors"
-            onClick={(e) => handleEmojiClick(e, emoji)}
-          >
-            {emoji}
-          </button>
-        ))}
-        <div className="text-white text-xs pl-2 pr-2 border-l border-[#1D4BBC]">{new Date().toLocaleTimeString()}</div>
+
+        {/* Taskbar Items */}
+        <div className="flex-1 flex px-2 space-x-1 overflow-x-auto">
+          {windows.map((window) => (
+            <button
+              key={window.id}
+              className={`px-2 h-8 max-w-[150px] text-white text-sm rounded-sm flex items-center truncate transition-colors ${activeWindowId === window.id && !window.isMinimized
+                ? 'bg-[#1d4bbc] shadow-inner'
+                : 'bg-[#3C8BF5] hover:bg-[#4C9BFF]'
+                }`}
+              onClick={() => {
+                if (window.isMinimized || activeWindowId !== window.id) {
+                  openWindow(window.id, window.title, window.content); // This restores/focuses
+                } else {
+                  minimizeWindow(window.id);
+                }
+              }}
+            >
+              <span className="mr-2">{window.icon || '📄'}</span>
+              <span className="truncate">{window.title}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="flex-shrink-0 flex items-center">
+          {["😍", "💖", "🌹", "🍫", "🎁"].map((emoji) => (
+            <button
+              key={emoji}
+              className="mx-1 text-2xl hover:bg-[#3C8BF5] rounded p-1 transition-colors"
+              onClick={(e) => handleEmojiClick(e, emoji)}
+            >
+              {emoji}
+            </button>
+          ))}
+          <div className="text-white text-xs pl-2 pr-2 border-l border-[#1D4BBC]">{new Date().toLocaleTimeString()}</div>
+        </div>
       </div>
 
       {/* Start Menu */}
@@ -298,6 +356,7 @@ export default function Home() {
         </div>
       )}
     </main>
+    </ThemeContext.Provider>
   )
 }
 
