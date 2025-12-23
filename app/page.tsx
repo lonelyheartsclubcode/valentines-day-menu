@@ -199,14 +199,9 @@ export default function Home() {
 
       {/* Desktop icons */}
       <div className="absolute top-4 left-4 flex flex-col gap-4">
-        <DesktopIcon 
-          emoji={theme === 'christmas' ? '🎄' : '💌'} 
-          label={theme === 'christmas' ? "Christmas Menu" : "Valentine's Menu"} 
-          onClick={handleOpenMenu} 
-        />
+        <DesktopIcon emoji="💌" label="Valentine's Day Menu" onClick={handleOpenMenu} />
         <DesktopIcon emoji="🏘️" label="Township" onClick={handleOpenTownship} />
         <DesktopIcon emoji="🎄" label="Christmas Note" onClick={() => setShowLoveNote(true)} />
-        <DesktopIcon emoji={theme === 'valentine' ? '🎄' : '💖'} label={theme === 'valentine' ? 'Xmas Mode' : 'Love Mode'} onClick={toggleTheme} />
       </div>
 
       {showInitialAnimation && (
@@ -352,6 +347,10 @@ export default function Home() {
           <StartMenu
             onMenuClick={() => {
               handleOpenMenu()
+              setShowStartMenu(false)
+            }}
+            onTownship={() => {
+              handleOpenTownship()
               setShowStartMenu(false)
             }}
             onLoveNote={() => {
