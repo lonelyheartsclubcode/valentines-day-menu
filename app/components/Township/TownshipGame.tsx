@@ -234,7 +234,7 @@ const TownshipGame: React.FC = () => {
     }
 
     return (
-        <div className="flex flex-col relative overflow-hidden font-sans select-none bg-[#87CEEB] h-full">
+        <div className="flex flex-col relative overflow-hidden font-sans select-none bg-[#87CEEB]" style={{ height: '100%', minHeight: '500px' }}>
             {/* UI Layer */}
             <div className="absolute inset-0 pointer-events-none z-40 flex flex-col justify-between p-2">
                 

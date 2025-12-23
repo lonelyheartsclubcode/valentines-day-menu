@@ -6,10 +6,11 @@ import { useTheme } from '../context/ThemeContext'
 
 interface StartMenuProps {
   onMenuClick: () => void
+  onLoveNote: () => void
   onLogout: () => void
 }
 
-const StartMenu: React.FC<StartMenuProps> = ({ onMenuClick, onLogout }) => {
+const StartMenu: React.FC<StartMenuProps> = ({ onMenuClick, onLoveNote, onLogout }) => {
   const { theme } = useTheme()
   const isChristmas = theme === 'christmas'
 
@@ -28,8 +29,15 @@ const StartMenu: React.FC<StartMenuProps> = ({ onMenuClick, onLogout }) => {
           className="w-full text-left px-2 py-1 hover:bg-[#316AC5] hover:text-white rounded flex items-center"
           onClick={onMenuClick}
         >
-          <span className="mr-2 text-2xl">{isChristmas ? '🎄' : '💌'}</span>
-          {isChristmas ? "Christmas Menu" : "Valentine's Menu"}
+          <span className="mr-2 text-2xl">💌</span>
+          Valentine's Day Menu
+        </button>
+        <button
+          className="w-full text-left px-2 py-1 hover:bg-[#316AC5] hover:text-white rounded flex items-center"
+          onClick={onLoveNote}
+        >
+          <span className="mr-2 text-2xl">💝</span>
+          Love Note
         </button>
         <button
           className="w-full text-left px-2 py-1 hover:bg-[#316AC5] hover:text-white rounded flex items-center"

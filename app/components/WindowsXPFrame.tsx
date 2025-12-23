@@ -87,7 +87,8 @@ const WindowsXPFrame: React.FC<WindowsXPFrameProps> = ({
         </div>
       </div>
       <div
-        className="flex-1 bg-white overflow-y-auto p-4 md:p-8 pb-16 relative"
+        className="flex-1 bg-white overflow-auto relative"
+        style={{ height: '100%' }}
       >
         {children}
       </div>

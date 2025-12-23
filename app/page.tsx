@@ -9,6 +9,7 @@ import DesktopIcon from "./components/DesktopIcon"
 import StartMenu from "./components/StartMenu"
 import LoginScreen from "./components/LoginScreen"
 import TownshipGame from "./components/Township/TownshipGame"
+import LoveNote from "./components/Township/LoveNote"
 import { useWindowManager } from "../hooks/useWindowManager"
 import type React from "react"
 
@@ -32,6 +33,7 @@ export default function Home() {
   const [showWarning, setShowWarning] = useState(true)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [theme, setTheme] = useState<'valentine' | 'christmas'>('valentine')
+  const [showLoveNote, setShowLoveNote] = useState(false)
   const controls = useAnimation()
 
   // Check if user has logged in before
@@ -203,6 +205,7 @@ export default function Home() {
           onClick={handleOpenMenu} 
         />
         <DesktopIcon emoji="🏘️" label="Township" onClick={handleOpenTownship} />
+        <DesktopIcon emoji="💝" label="Love Note" onClick={() => setShowLoveNote(true)} />
         <DesktopIcon emoji={theme === 'valentine' ? '🎄' : '💖'} label={theme === 'valentine' ? 'Xmas Mode' : 'Love Mode'} onClick={toggleTheme} />
       </div>
 
@@ -351,10 +354,17 @@ export default function Home() {
               handleOpenMenu()
               setShowStartMenu(false)
             }}
+            onLoveNote={() => {
+              setShowLoveNote(true)
+              setShowStartMenu(false)
+            }}
             onLogout={handleLogout}
           />
         </div>
       )}
+
+      {/* Love Note Modal */}
+      {showLoveNote && <LoveNote onClose={() => setShowLoveNote(false)} />}
     </main>
     </ThemeContext.Provider>
   )
